@@ -47,7 +47,7 @@ try:
                     process = 100 * float(len(data_list)) / float(row_count)
 
                     if process.is_integer():
-                        print('jieba process of ' + year + ': ' + str(round(process))+ '%')
+                        print('jieba process of %s: %d %%' % (year ,round((process))))
 
             data_dict = {}
 
@@ -61,7 +61,7 @@ try:
 
             result_list = list(data_dict.values())
 
-            print('start dumping result into data...')
+            print('start dumping %s result into data...' % (year))
 
             with open('./data/data' + year + '.csv', 'w', newline='', encoding = 'gb18030') as csvfile:
                 fieldnames = ['Code', 'Year', 'AMB', 'Risk']
@@ -71,8 +71,8 @@ try:
                 for row in result_list:
                     rows.writerow({'Code': row.get('code'), 'Year': year, 'AMB': str(row.get('amb')), 'Risk': str(row.get('risk'))})
 
-            print('end dumping result into data...')
-            print('execution time:' + str(round(time.time() - start_time, 1)) + 's')
+            print('end dumping %s result into data...' % (year))
+            print('execution time: %.2f s' % (round(time.time() - start_time, 1)))
 
 except:
     print(sys.exc_info())
