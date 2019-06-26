@@ -23,7 +23,7 @@ try:
             with open('./articles/' + year + '.csv', 'r', newline='', encoding = 'gb18030') as csvfile:
                 row_count = sum(1 for row in csvfile) - 1
 
-            with open('./articles/' + year + '.csv', 'r', newline='', encoding = 'gb18030') as csvfile:
+            with open('./articles/' + year + '.csv', 'r', newline='') as csvfile:
                 rows = csv.reader(csvfile)
                 next(rows)
 
