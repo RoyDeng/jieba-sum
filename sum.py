@@ -1,10 +1,12 @@
 import sys
 import os
 import csv
+import time
 import jieba
 from jieba import analyse
 from collections import defaultdict
 from json import dumps
+import time
 
 try:
     # TODO: Add words.
@@ -13,6 +15,7 @@ try:
 
     for (root, dirs, files) in os.walk('./articles'):
         for name in files:
+            start_time = time.time()
             year = os.path.splitext(name)[0]
             row_count = 0
             data_list = []
@@ -44,7 +47,7 @@ try:
                     process = 100 * float(len(data_list)) / float(row_count)
 
                     if process.is_integer():
-                        print('Jieba process of ' + year + ': ' + str(round(process))+ '%')
+                        print('jieba process of ' + year + ': ' + str(round(process))+ '%')
 
             data_dict = {}
 
@@ -58,6 +61,8 @@ try:
 
             result_list = list(data_dict.values())
 
+            print('start dumping result into data...')
+
             with open('./data/data' + year + '.csv', 'w', newline='', encoding = 'gb18030') as csvfile:
                 fieldnames = ['Code', 'Year', 'AMB', 'Risk']
                 rows = csv.DictWriter(csvfile, fieldnames = fieldnames)
@@ -65,6 +70,9 @@ try:
 
                 for row in result_list:
                     rows.writerow({'Code': row.get('code'), 'Year': year, 'AMB': str(row.get('amb')), 'Risk': str(row.get('risk'))})
+
+            print('end dumping result into data...')
+            print('execution time:' + str(round(time.time() - start_time, 1)) + 's')
 
 except:
     print(sys.exc_info())
