@@ -9,9 +9,8 @@ from json import dumps
 import time
 
 try:
-    # TODO: Add words.
-    amb_list = ['擱置', '懷疑']
-    risk_list = ['偏差']
+    amb_list = ['相信', '認為', '不確定', '突然', '推測']
+    risk_list = ['預期', '大約', '可能', '變化', '預計']
 
     for (root, dirs, files) in os.walk('./articles'):
         for name in files:
