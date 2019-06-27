@@ -20,10 +20,10 @@ try:
             row_count = 0
             data_list = []
 
-            with open('./articles/' + year + '.csv', 'r', newline='', encoding = 'gb18030') as csvfile:
+            with open('./articles/%s.csv' % (year), 'r', newline='', encoding = 'gb18030') as csvfile:
                 row_count = sum(1 for row in csvfile) - 1
 
-            with open('./articles/' + year + '.csv', 'r', newline='') as csvfile:
+            with open('./articles/%s.csv' % (year), 'r', newline='') as csvfile:
                 rows = csv.reader(csvfile)
                 next(rows)
 
@@ -33,9 +33,9 @@ try:
                     word_list = list(analyse.textrank(row[5].strip()))
 
                     for word in word_list:
-                        if all(word == i for i in amb_list):
+                        if all(word == amb_word for amb_word in amb_list):
                             amb += 1
-                        if all(word == i for i in risk_list):
+                        if all(word == risk_word for risk_word in risk_list):
                             risk += 1
  
                     data_list.append({
@@ -63,7 +63,7 @@ try:
 
             print('start dumping %s result into data...' % (year))
 
-            with open('./data/data' + year + '.csv', 'w', newline='', encoding = 'gb18030') as csvfile:
+            with open('./data/data%s.csv' % (year), 'w', newline='', encoding = 'gb18030') as csvfile:
                 fieldnames = ['Code', 'Year', 'AMB', 'Risk']
                 rows = csv.DictWriter(csvfile, fieldnames = fieldnames)
                 rows.writeheader()
