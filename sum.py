@@ -22,7 +22,7 @@ try:
             with open('./articles/%s.csv' % (year), 'r', newline='', encoding = 'gb18030') as csvfile:
                 row_count = sum(1 for row in csvfile) - 1
 
-            with open('./articles/%s.csv' % (year), 'r', newline='') as csvfile:
+            with open('./articles/%s.csv' % (year), 'r', newline='', errors='ignore') as csvfile:
                 rows = csv.reader(csvfile)
                 next(rows)
 
@@ -31,12 +31,14 @@ try:
                     risk = 0
                     word_list = list(analyse.textrank(row[5].strip()))
 
+                    print(word_list)
+
                     for word in word_list:
-                        if all(word == amb_word for amb_word in amb_list):
+                        if any(word in amb_word for amb_word in amb_list):
                             amb += 1
-                        if all(word == risk_word for risk_word in risk_list):
+                        if any(word in risk_word for risk_word in risk_list):
                             risk += 1
- 
+
                     data_list.append({
                         'code': row[0].strip(),
                         'amb': amb,
@@ -45,8 +47,12 @@ try:
 
                     process = 100 * float(len(data_list)) / float(row_count)
 
-                    if process.is_integer():
-                        print('jieba process of %s: %d %%' % (year ,round((process))))
+                    if int(process) == float(process):
+                        decimals = 0
+                    else:
+                        decimals = 2
+
+                    print('jieba process of %s: %s%%' % (year, '{0:.{1}f}'.format(process, decimals)))
 
             data_dict = {}
 
@@ -62,7 +68,7 @@ try:
 
             print('start dumping %s result into data...' % (year))
 
-            with open('./data/data%s.csv' % (year), 'w', newline='', encoding = 'gb18030') as csvfile:
+            with open('./data/data%s.csv' % (year), 'w', newline='', encoding = 'cp950') as csvfile:
                 fieldnames = ['Code', 'Year', 'AMB', 'Risk']
                 rows = csv.DictWriter(csvfile, fieldnames = fieldnames)
                 rows.writeheader()
