@@ -7,6 +7,7 @@ from jieba import analyse
 from collections import defaultdict
 from json import dumps
 import time
+import progressbar
 
 try:
     amb_list = ['相信', '認為', '不確定', '突然', '推測']
@@ -23,6 +24,8 @@ try:
                 row_count = sum(1 for row in csvfile) - 1
 
             with open('./articles/%s.csv' % (year), 'r', newline='', errors='ignore') as csvfile:
+                bar = progressbar.ProgressBar(prefix = 'jieba progress of %s: ' % (year), max_value = row_count)
+                i = 0
                 rows = csv.reader(csvfile)
                 next(rows)
 
@@ -30,8 +33,6 @@ try:
                     amb = 0
                     risk = 0
                     word_list = list(analyse.textrank(row[5].strip()))
-
-                    print(word_list)
 
                     for word in word_list:
                         if any(word in amb_word for amb_word in amb_list):
@@ -45,14 +46,9 @@ try:
                         'risk': risk
                     })
 
-                    process = 100 * float(len(data_list)) / float(row_count)
+                    i += 1
 
-                    if int(process) == float(process):
-                        decimals = 0
-                    else:
-                        decimals = 2
-
-                    print('jieba process of %s: %s%%' % (year, '{0:.{1}f}'.format(process, decimals)))
+                    bar.update(i)
 
             data_dict = {}
 
